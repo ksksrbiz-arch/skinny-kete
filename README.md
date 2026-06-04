@@ -1,23 +1,41 @@
-# Spotify clone with View Transitions from Astro 3.0 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+# 1Commerce Audio
 
-Clone of Spotify with [Astro View Transitions](https://docs.astro.build/en/guides/view-transitions/) is an **experimental feature** for fluid navigation, this example uses TailwindCSS and Svelte.
+A functional **ultra hi-res lossless music player** branded for the
+**1Commerce** business, built on Astro + Svelte + TailwindCSS.
 
-## Deploy
-You can Deploy the example using [Vercel Template](https://vercel.com/templates/astro/view-transitions) or see a [live demo](https://spotify-astro-transitions.vercel.app/)
+## Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?](https://vercel.com/new/clone?demo-description=Spotify%20clone%20built%20with%20Astro%20View%20Transitions%20integration%20for%20fluid%20navigation%20%2B%20TailwindCSS%20%2B%20Svelte.%0A&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F59uwliGeS8XoE5nHRBEsfI%2F2232d50cdddae956828ddb501ff2d993%2FCleanShot_2023-09-05_at_16.13.01_2x.png&demo-title=Spotify%20Clone%20with%20Astro%20View%20Transitions&demo-url=https%3A%2F%2Fspotify-astro-transitions.vercel.app%2F&from=templates&project-name=Spotify%20Clone%20with%20Astro%20View%20Transitions&repository-name=view-transitions&repository-url=https%3A%2F%2Fgithub.com%2Figorm84%2Fspotify-astro-transitions&skippable-integrations=1))
+- 🎵 Real HTML5 audio playback with a persistent bottom player bar
+- 💿 Lossless source support (WAV / FLAC, up to 24-bit / 192 kHz)
+- ▶️ Play / pause, next / previous, scrub-to-seek, volume control
+- 📜 Click any row in a playlist's track list to start playing
+- 🔁 Auto-advance through the queue when a track finishes
+- �� 1Commerce branding (sidebar logo, page titles, lossless quality badges)
+- ✨ Astro view transitions for fluid navigation between pages
 
-#### Video
-https://github.com/igorm84/spotify-astro-transitions/assets/16727448/1e34f079-1f17-4ff1-9285-1dc406f0c631
+## Run locally
 
-### About
+```bash
+npm install --legacy-peer-deps
+npm run dev
+```
 
-View Transition is a **experimental** mechanism to transition between DOM states, learn more in these links:
+Then open <http://localhost:4321>.
 
-- Astro Documentation: https://docs.astro.build/en/guides/view-transitions/
-- MDN Documentation: https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API
+## How the player works
 
-### Known issues
-#### Firefox and iOS Browsers
-Unfortunately those browsers aren't compatible yet, see
-https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API#browser_compatibility
+- `src/lib/player.ts` – tiny `window` event bus (`1commerce:player`) that
+  any island/page can dispatch commands onto.
+- `src/components/Player.svelte` – the single global player island. It owns
+  the `<audio>` element and reactive playback state.
+- `src/components/MusicsTable.astro` – every row dispatches a `play` command
+  with the current song queue + index when clicked.
+- `src/layouts/Layout.astro` – mounts the player once for the whole app via
+  `<Player client:load />`.
+
+## Lossless audio sources
+
+The bundled demo tracks point at free PCM/WAV samples from
+[samplelib.com](https://samplelib.com) so playback works out of the box.
+Swap the `src` and `format` fields in `src/lib/data.ts` to point at your
+own FLAC/WAV catalogue.

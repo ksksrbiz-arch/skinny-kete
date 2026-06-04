@@ -59,7 +59,7 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
     </div>
 
     <div class="bg-zinc-900/30 mt-6 flex-1 p-6">
-      <div class="flex gap-1 items-center">
+      <div class="flex gap-1 items-center" data-playlist-controls>
         <PlayButton size="lg" />
         <div class="ml-4" transition:name=`playlist ${playlist?.id} play`></div>
         <LikeButton />
@@ -92,3 +92,25 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
     line-height: 1;
   }
 </style>
+
+<script>
+  import { playSongs } from "../../lib/player";
+  import { songs } from "../../lib/data";
+
+  function wireUp() {
+    document
+      .querySelectorAll<HTMLElement>("[data-playlist-controls]")
+      .forEach((el) => {
+        if (el.dataset.wired === "true") return;
+        el.dataset.wired = "true";
+        const btn = el.querySelector("span"); // PlayButton root
+        btn?.addEventListener("click", () => playSongs(songs, 0));
+        btn?.setAttribute("role", "button");
+        btn?.setAttribute("tabindex", "0");
+        btn?.classList.add("cursor-pointer");
+      });
+  }
+
+  wireUp();
+  document.addEventListener("astro:page-load", wireUp);
+</script>

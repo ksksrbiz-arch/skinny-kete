@@ -13,4 +13,9 @@
   }
 </script>
 
-<h1 class="text-3xl font-bold">{greeting}</h1>
+<div>
+  <h1 class="text-3xl font-bold">{greeting}</h1>
+  <p class="text-sm text-emerald-300 mt-1 tracking-wide uppercase">
+    1Commerce Audio · Ultra Hi-Res Lossless Playback
+  </p>
+</div>

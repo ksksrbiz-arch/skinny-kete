@@ -1,16 +1,20 @@
 ---
-import { Icon } from "astro-icon";
+import Icon from "./Icon.astro";
 import { songs } from "../lib/data";
 import PureInlineArtists from "./PureInlineArtists.astro";
 import InlineArtists from "./InlineArtists.astro";
 ---
 
-<table class="table-auto text-left min-w-full divide-y-2 divide-gray-500/30">
+<table
+  class="table-auto text-left min-w-full divide-y-2 divide-gray-500/30"
+  data-music-table
+>
   <thead>
     <tr class="text-gray-300">
       <th class="font-normal px-4 py-2 whitespace-nowrap">#</th>
       <th class="font-normal px-4 py-2 whitespace-nowrap">Title</th>
       <th class="font-normal px-4 py-2 whitespace-nowrap">Album</th>
+      <th class="font-normal px-4 py-2 whitespace-nowrap">Quality</th>
       <th class="font-normal px-4 py-2 whitespace-nowrap text-right">
         <Icon name="carbon:time" class="inline-block h-5 w-5" />
       </th>
@@ -19,7 +23,11 @@ import InlineArtists from "./InlineArtists.astro";
   <tbody>
     {
       songs.map((song, index) => (
-        <tr class="group hover:bg-gray-500/20">
+        <tr
+          class="group hover:bg-gray-500/20 cursor-pointer"
+          data-song-row
+          data-index={index}
+        >
           <td class="whitespace-nowrap px-4 py-2">{index + 1}</td>
           <td class="whitespace-nowrap px-4 py-2 flex gap-3 items-center">
             <div class="h-10 w-10">
@@ -30,24 +38,23 @@ import InlineArtists from "./InlineArtists.astro";
               />
             </div>
             <div class="leading-none">
-              <a
-                href="#"
-                class="text-gray-300 group-hover:text-white hover:underline text-sm"
-              >
+              <span class="text-gray-300 group-hover:text-white text-sm">
                 {song.title}
-              </a>
+              </span>
               <div class="text-sm text-gray-300 group-hover:text-white">
                 <InlineArtists artists={song.artists} />
               </div>
             </div>
           </td>
           <td class="whitespace-nowrap px-4 py-2">
-            <a
-              href="#"
-              class="text-gray-300 group-hover:text-white hover:underline text-sm"
-            >
+            <span class="text-gray-300 group-hover:text-white text-sm">
               {song.album}
-            </a>
+            </span>
+          </td>
+          <td class="whitespace-nowrap px-4 py-2">
+            <span class="text-[10px] tracking-widest uppercase font-bold px-2 py-1 rounded border border-emerald-400/60 text-emerald-300">
+              {song.format}
+            </span>
           </td>
           <td class="whitespace-nowrap px-4 py-2 text-right">
             {song.duration}
@@ -57,3 +64,23 @@ import InlineArtists from "./InlineArtists.astro";
     }
   </tbody>
 </table>
+
+<script>
+  import { playSongs } from "../lib/player";
+  import { songs } from "../lib/data";
+
+  function wireUp() {
+    document.querySelectorAll<HTMLElement>("[data-song-row]").forEach((row) => {
+      if (row.dataset.wired === "true") return;
+      row.dataset.wired = "true";
+      row.addEventListener("click", () => {
+        const index = Number(row.dataset.index ?? 0);
+        playSongs(songs, index);
+      });
+    });
+  }
+
+  wireUp();
+  document.addEventListener("astro:page-load", wireUp);
+</script>
+

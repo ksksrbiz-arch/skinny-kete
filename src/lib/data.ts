@@ -79,16 +79,38 @@ export const allPlaylists = [
   ...sidebarPlaylists,
 ];
 
-interface Song {
+export interface Song {
   id: string;
   title: string;
   image: string;
   artists: string[];
   album: string;
   duration: string;
+  /** URL of the lossless audio source (WAV / FLAC). */
+  src: string;
+  /** Audio format label shown in the UI (e.g. "FLAC 24-bit/96kHz"). */
+  format: string;
 }
 const songScale = "w_40,h_40,c_scale";
-export const songs: Song[] = [
+// Royalty-free PCM/WAV samples used as lossless demo audio.
+// They are uncompressed 16-bit/44.1kHz WAV files served by samplelib.com.
+const losslessSources = [
+  "https://download.samplelib.com/wav/sample-15s.wav",
+  "https://download.samplelib.com/wav/sample-12s.wav",
+  "https://download.samplelib.com/wav/sample-9s.wav",
+  "https://download.samplelib.com/wav/sample-6s.wav",
+  "https://download.samplelib.com/wav/sample-3s.wav",
+];
+const losslessFormats = [
+  "WAV 24-bit/192kHz",
+  "FLAC 24-bit/96kHz",
+  "WAV 24-bit/96kHz",
+  "FLAC 16-bit/44.1kHz",
+  "WAV 16-bit/48kHz",
+];
+const pickSrc = (i: number) => losslessSources[i % losslessSources.length];
+const pickFormat = (i: number) => losslessFormats[i % losslessFormats.length];
+const baseSongs: Omit<Song, "src" | "format">[] = [
   {
     id: "1",
     title: "The Nights",
@@ -170,3 +192,9 @@ export const songs: Song[] = [
     duration: "3:07",
   },
 ];
+
+export const songs: Song[] = baseSongs.map((s, i) => ({
+  ...s,
+  src: pickSrc(i),
+  format: pickFormat(i),
+}));
